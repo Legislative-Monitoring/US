@@ -90,7 +90,22 @@ const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 const count=s=>BILLS.filter(b=>b.state===s).length;
 
 async function init(){
-  try{if(!SHEET_CSV_URL)throw 0;const r=await fetch(SHEET_CSV_URL);if(!r.ok)throw 0;BILLS=fromRows(parseCSV(await r.text()))}catch(e){console.warn("Sheet load failed, using sample data",e);BILLS=SAMPLE}
+  try {
+    if(!SHEET_CSV_URL) throw new Error("Google Sheet CSV URL is empty");
+    const r = await fetch(SHEET_CSV_URL, {cache:"no-store"});
+    if(!r.ok) throw new Error(`Google Sheets HTTP ${r.status}`);
+    const csv = await r.text();
+    console.log("Google Sheet CSV loaded:", csv.length, "characters");
+    const rows = parseCSV(csv);
+    console.log("Google Sheet rows:", rows.length, rows[0] || {});
+    const mapped = fromRows(rows);
+    console.log("Valid bills mapped:", mapped.length);
+    if(!mapped.length) throw new Error("CSV loaded, but no valid bills were found. Check the required headers and state codes.");
+    BILLS = mapped;
+  } catch(e) {
+    console.error("Google Sheet load failed; using sample data instead:", e);
+    BILLS = SAMPLE;
+  }
   BILLS.sort((a,b)=>(b.updated||"").localeCompare(a.updated||""));
   const st=$("#state");
   Object.entries(STATES).forEach(([k,v])=>st.add(new Option(`${v} (${k})`,k)));
