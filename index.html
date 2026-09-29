@@ -59,7 +59,7 @@ const SUPABASE_KEY = "";   // anon public key
 /* DATA SOURCE: paste your Google Sheet's published CSV link here
    (Sheet > File > Share > Publish to web > choose the Bills tab > CSV > Publish).
    Leave empty to show sample data. */
-const SHEET_CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSAABCrB6NMqk7XTMOVkQK_2PJC1S2e1UVG7bVMx90stRoUA4egeHRvc6-qgR3pP2Qynsu8X0IkfwIX/pub?gid=1586647547&single=true&output=csv=";
+const SHEET_CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSAABCrB6NMqk7XTMOVkQK_2PJC1S2e1UVG7bVMx90stRoUA4egeHRvc6-qgR3pP2Qynsu8X0IkfwIX/pub?gid=1586647547&single=true&output=csv";
 function parseCSV(t){const rows=[];let r=[],f="",q=false;
   for(let i=0;i<t.length;i++){const c=t[i];
     if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
